@@ -19,5 +19,25 @@ function boldTextInNode(node) {
     }
 }
 
-// Start the processing with the body of the document
-boldTextInNode(document.body);
+// Function to check if the domain is in the CSV list
+function isDomainInList(domain, list) {
+    return list.includes(domain);
+}
+
+// Fetch and parse the CSV list
+fetch(chrome.runtime.getURL('whitelist.csv'))
+    .then(response => response.text())
+    .then(text => {
+        const blockedDomains = text.split(',').map(domain => domain.trim());
+
+        // Get the current tab's domain
+        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+            const url = new URL(tabs[0].url);
+            const domain = url.hostname;
+
+            if (!isDomainInList(domain, blockedDomains)) {
+                // If the domain is not in the list, run the extension logic
+                boldTextInNode(document.body);
+            }
+        });
+    });
