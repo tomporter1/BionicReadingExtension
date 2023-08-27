@@ -3,15 +3,29 @@
   "name": "Bionic Reading",
   "version": "1.0",
   "description": "Bold the initial letters of words for better readability",
-  "permissions": ["activeTab"],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "webNavigation",
+    "tabs"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["styles.css"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "csv": [
+        "whitelist.csv"
+      ]
     }
   ]
 }
