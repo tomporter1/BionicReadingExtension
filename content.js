@@ -1,9 +1,14 @@
+const strength = 0.4
+
 function boldTextInNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
         // Check if the node has actual visible text
         if (/\S/.test(node.nodeValue)) {
             const wrapper = document.createElement('span');
-            wrapper.innerHTML = node.nodeValue.replace(/\b(\w{1,2})/g, '<strong>$1</strong>');
+            wrapper.innerHTML = node.nodeValue.replace(/\b(\w+)\b/g, function (match, word) {
+                const boldLength = Math.ceil(word.length * strength);
+                return `<strong class="bionic-bold">${word.substring(0, boldLength)}</strong>${word.substring(boldLength)}`;
+            });
             node.replaceWith(wrapper);
         }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
