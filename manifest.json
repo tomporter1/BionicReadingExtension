@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Boinic Reading",
+  "name": "Bionic Reading",
   "version": "1.0",
   "description": "Bold the initial letters of words for better readability",
   "permissions": ["activeTab"],
