@@ -34,7 +34,7 @@ function isDomainInList(domain, list) {
 
 //get list of blocked domains from included csv file
 const blockedDomains = [];
-fetch(chrome.runtime.getURL("whitelist.csv"))
+fetch(chrome.runtime.getURL("blocklist.csv"))
     .then(response => {
         if (!response.ok) {
             throw new Error("Network response was not ok");

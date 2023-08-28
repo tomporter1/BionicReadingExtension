@@ -2,7 +2,7 @@ console.log("Background service worker loaded.");
 
 // let blockedDomains = [];
 
-// fetch(chrome.runtime.getURL('whitelist.csv'))
+// fetch(chrome.runtime.getURL('blocklist.csv'))
 //     .then(response => response.text())
 //     .then(data => {
 //         blockedDomains = data.split(/\r\n|\n/).map(domain => domain.trim()).filter(domain => domain.length > 0);
