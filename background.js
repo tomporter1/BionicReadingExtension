@@ -1,22 +1,18 @@
 console.log("Background service worker loaded.");
 
-// chrome.runtime.onInstalled.addListener(() => {
-//     const defaultWhitelist = [];
-//     chrome.storage.sync.set({ whitelist: defaultWhitelist });
-// });
+// let blockedDomains = [];
 
+// fetch(chrome.runtime.getURL('whitelist.csv'))
+//     .then(response => response.text())
+//     .then(data => {
+//         blockedDomains = data.split(/\r\n|\n/).map(domain => domain.trim()).filter(domain => domain.length > 0);
+//         console.log(`Loaded ${blockedDomains.length} domains to block.`);
+//     });
 
-// chrome.storage.sync.get("whitelist", (result) => {
-//     const blockedDomains = result.whitelist;
-
-//     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-//         const url = new URL(tabs[0].url);
-//         const domain = url.hostname;
-
-
-//         if (!isDomainInList(domain, blockedDomains)) {
-//             // If the domain is not in the list, run the extension logic
-//             boldTextInNode(document.body);
-//         }
-//     })
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//     console.log(`Received message: ${message.action}`)
+//     if (message.action === "isDomainBlocked") {
+//         console.log(`Checking if ${message.domain} is blocked.`);
+//         sendResponse({ isBlocked: blockedDomains.includes(message.domain) });
+//     }
 // });

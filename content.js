@@ -19,9 +19,42 @@ function boldTextInNode(node) {
     }
 }
 
+// console.log("Sending message to background script");
+// chrome.runtime.sendMessage({ action: "isDomainBlocked", domain: window.location.hostname }, (response) => {
+//     console.log("Received response:", response);
+//     if (!response.isBlocked) {
+//         boldTextInNode(document.body);
+//     }
+// });
+
 // Function to check if the domain is in the CSV list
 function isDomainInList(domain, list) {
     return list.includes(domain);
 }
 
-boldTextInNode(document.body);
+//get list of blocked domains from included csv file
+const blockedDomains = [];
+fetch(chrome.runtime.getURL("whitelist.csv"))
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.text();
+    })
+    .then(data => {
+        const lines = data.split(/\r\n|\n/);
+        lines.forEach(line => {
+            blockedDomains.push(line);
+        });
+    })
+    .catch(error => {
+        console.log("Fetch error: " + error);
+    });
+
+var domain = window.location.hostname;
+
+if (!isDomainInList(domain, blockedDomains)) {
+    console.log(`${domain} not in list.. running extension`);
+    // If the domain is not in the list, run the extension logic
+    boldTextInNode(document.body);
+}

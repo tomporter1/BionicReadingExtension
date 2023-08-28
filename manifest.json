@@ -22,10 +22,18 @@
       ],
       "css": [
         "styles.css"
-      ],
-      "csv": [
-        "whitelist.csv"
       ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "whitelist.csv"
+      ],
+      "matches": [
+        "<all_urls>"
+      ],
+      "use_dynamic_url": false
     }
   ]
 }
