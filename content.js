@@ -34,6 +34,20 @@ function isDomainInList(domain, list) {
 
 //get list of blocked domains from included csv file
 const blockedDomains = [];
+
+function checkDomainAndRunExtension() {
+    var domain = window.location.hostname.replace("www.", "");
+
+    if (!isDomainInList(domain, blockedDomains)) {
+        console.log(`${domain} not in list.. running bionic reading`);
+        // If the domain is not in the list, run the extension logic
+        boldTextInNode(document.body);
+    }
+    else {
+        console.log(`${domain} in list.. not running bionic reading`);
+    }
+}
+
 fetch(chrome.runtime.getURL("blocklist.csv"))
     .then(response => {
         if (!response.ok) {
@@ -46,15 +60,11 @@ fetch(chrome.runtime.getURL("blocklist.csv"))
         lines.forEach(line => {
             blockedDomains.push(line);
         });
+        console.log(`Loaded ${blockedDomains.length} domains to block.`);
+        
+        // Call the function after blocklist is loaded
+        checkDomainAndRunExtension();
     })
     .catch(error => {
         console.log("Fetch error: " + error);
     });
-
-var domain = window.location.hostname;
-
-if (!isDomainInList(domain, blockedDomains)) {
-    console.log(`${domain} not in list.. running extension`);
-    // If the domain is not in the list, run the extension logic
-    boldTextInNode(document.body);
-}

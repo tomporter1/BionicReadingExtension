@@ -28,7 +28,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "whitelist.csv"
+        "blocklist.csv"
       ],
       "matches": [
         "<all_urls>"
