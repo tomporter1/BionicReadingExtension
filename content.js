@@ -1,4 +1,5 @@
-const strength = 0.4;
+var strength = 0.4;
+var blockedDomains = [];
 
 /**
  * Bold the text in a given node.
@@ -38,8 +39,6 @@ function isDomainInList(domain, list) {
     return list.includes(domain);
 }
 
-//get list of blocked domains from included csv file
-const blockedDomains = [];
 
 function checkDomainAndRunExtension() {
     var domain = window.location.hostname.replace("www.", "");
@@ -54,37 +53,43 @@ function checkDomainAndRunExtension() {
     }
 }
 
-fetch(chrome.runtime.getURL("blocklist.csv"))
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-        return response.text();
-    })
-    .then(data => {
-        const lines = data.split(/\r\n|\n/);
-        lines.forEach(line => {
-            blockedDomains.push(line);
-        });
-        console.log(`Loaded ${blockedDomains.length} domains to block.`);
-
-        // Call the function after blocklist is loaded
-        checkDomainAndRunExtension();
-    })
-    .catch(error => {
-        console.log("Fetch error: " + error);
-    });
-
 // MutationObserver to watch for changes in the DOM
 const observer = new MutationObserver((mutationsList, observer) => {
+    var addedNodes = []
     for (let mutation of mutationsList) {
-        if (mutation.type === 'childList') {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
             for (let addedNode of mutation.addedNodes) {
-                boldTextInNode(addedNode);
+                addedNodes.push(addedNode);
             }
+        }
+    }
+
+    if (addedNodes.length > 0) {
+        //console.log(`Mutation detected, bolding text in ${addedNodes.length} added nodes.`);
+        for (let node of addedNodes) {
+            boldTextInNode(node);
         }
     }
 });
 
-// Start observing the entire document with the configured parameters
-observer.observe(document, { childList: true, subtree: true });
+chrome.storage.local.get(['strength', 'blocklist'], function (result) {
+    strength = result.strength || 0.4;  // Default to 0.4    
+    blockedDomains = result.blocklist || [];
+
+    console.log(`Loaded ${blockedDomains.length} domains to block.`);
+    console.log(`Strength: ${strength}`);
+    console.log(`result.strength: ${result.strength}, result.blocklist: ${result.blocklist}`);
+
+    if (!result.strength || !result.blocklist) {
+        console.log('No settings found in storage, saving defaults.');
+        chrome.storage.local.set({
+            'strength': strengthValue,
+            'blocklist': blocklistValue
+        });
+    }
+
+    // Start observing the entire document with the configured parameters
+    observer.observe(document, { childList: true, subtree: true });
+
+    checkDomainAndRunExtension();
+});
