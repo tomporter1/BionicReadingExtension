@@ -1,4 +1,7 @@
 # Bionic Reading Extension
 
-A Chrome extension that bolds the initial 40% of each word on a webpage for enhanced readability. 
-Excludes specified domains, stored in [blocklist.csv](https://github.com/tomporter1/BionicReadingExtension/blob/main/blocklist.csv).
+![Bionic Reading Icon](icons/BionicReadingIcon128.png)
+
+A Chrome extension that enhances readability by bolding a customizable portion of the beginning of each word on a webpage. Users can adjust the strength of this effect via the extension's popup.
+
+Excludes specified domains. Users can view and modify the blocklist directly from the extension's popup.
