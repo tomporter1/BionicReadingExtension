@@ -6,6 +6,12 @@ A Chrome extension that enhances readability by bolding a customizable portion o
 
 Excludes specified domains. Users can view and modify the blocklist directly from the extension's popup.
 
+## Example
+### Before
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ullamcorper ante facilisis vestibulum blandit. Proin luctus scelerisque imperdiet. Aenean posuere justo id dolor tincidunt porta. Donec rutrum sem ut faucibus dapibus. Cras malesuada scelerisque diam. Quisque auctor est varius lacus lobortis, eget aliquam odio consectetur. In congue tempus augue, vel blandit erat luctus eget.
+### After
+> **Lo**rem **ip**sum **do**lor **si**t **am**et, **conse**ctetur **adip**iscing **el**it. **Mau**ris **ullam**corper **an**te **faci**lisis **vest**ibulum **blan**dit. **Pr**oin **luc**tus **scele**risque **impe**rdiet. **Aen**ean **pos**uere **ju**sto **i**d **do**lor **tinc**idunt **por**ta. **Do**nec **rut**rum **se**m **u**t **fauc**ibus **dapi**bus. **Cr**as **male**suada **scele**risque **di**am. **Qui**sque **auc**tor **es**t **var**ius **la**cus **lobo**rtis, **eg**et **ali**quam **od**io **conse**ctetur. **I**n **con**gue **tem**pus **aug**ue, **ve**l **bla**ndit **er**at **luc**tus **eg**et.
+
 ## Usage
 
 To use the Bionic Reading Extension, follow the steps below:
