@@ -23,8 +23,7 @@ chrome.storage.local.get(["strength", "blocklist"], function (result) {
   const blocklistValue = result.blocklist || [];
 
   document.getElementById("strength").value = strengthValue;
-  //document.getElementById("blocklist").value = blocklistValue.join(",");
-
+  
   // If the values were not found in storage (i.e., defaults were used), save the defaults
   if (!result.strength || !result.blocklist) {
     chrome.storage.local.set({
@@ -37,6 +36,7 @@ chrome.storage.local.get(["strength", "blocklist"], function (result) {
 document.addEventListener("DOMContentLoaded", function () {
   // Get the button element
   let toggleButton = document.getElementById("disable-for-website");
+  let pauseButton = document.getElementById("pause-for-session");
 
   // Get the status of the current domain and set the button label accordingly
   chrome.runtime.sendMessage(
@@ -46,6 +46,18 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleButton.textContent = "Enable for This Website";
       } else {
         toggleButton.textContent = "Disable for This Website";
+      }
+    }
+  );
+
+  // Get the status of the extension pause state and set the button label accordingly
+  chrome.runtime.sendMessage(
+    { action: "check_paused_status" },
+    function (response) {
+      if (response.isPaused) {
+        pauseButton.textContent = "Resume for This Session";
+      } else {
+        pauseButton.textContent = "Pause for This Session";
       }
     }
   );

@@ -93,33 +93,10 @@ const observer = new MutationObserver((mutationsList, observer) => {
   }
 });
 
-chrome.storage.local.get(["strength", "blocklist"], function (result) {
-  strength = result.strength || 0.4; // Default to 0.4
-  blockedDomains = result.blocklist || [];
-
-  // console.log(
-  //   `BionicReading: Loaded ${blockedDomains.length} domains to block.`
-  // );
-  // console.log(`BionicReading: Strength: ${strength}`);
-  // console.log(
-  //   `BionicReading: result.strength: ${result.strength}, result.blocklist: ${result.blocklist}`
-  // );
-
-  if (!result.strength || !result.blocklist) {
-    // console.log("No settings found in storage, saving defaults.");
-    chrome.storage.local.set({
-      strength: strengthValue,
-      blocklist: blocklistValue,
-    });
-  }
-
-  checkDomainAndRunExtension();
-});
-
 // Function to check whether the current website is disabled or the extension is paused
-function checkWebsiteStatus(callback) {
+function checkPauseStatus(callback) {
   chrome.runtime.sendMessage(
-    { action: "check_website_status" },
+    { action: "check_paused_status" },
     function (response) {
       callback(response);
     }
@@ -128,8 +105,8 @@ function checkWebsiteStatus(callback) {
 
 // Modified function to apply the bold effect only if the website is not disabled and the extension is not paused
 function applyBoldEffect() {
-  checkWebsiteStatus(function (status) {
-    if (!status.isDisabled && !status.isPaused) {
+  checkPauseStatus(function (status) {
+    if (!status.isPaused) {
       // Original bold effect code (integrated)
       var domain = window.location.hostname.replace("www.", "");
 
@@ -147,6 +124,9 @@ function applyBoldEffect() {
           `BionicReading: ${domain} in list.. not running bionic reading`
         );
       }
+    }
+    else {
+      console.log("BionicReading: Extension paused, not running bionic reading");
     }
   });
 }
