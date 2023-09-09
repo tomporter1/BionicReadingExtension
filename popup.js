@@ -83,4 +83,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       );
     });
+
+  document
+    .getElementById("show-all-domains")
+    .addEventListener("click", function () {
+      chrome.runtime.sendMessage(
+        { action: "get_all_disabled" },
+        function (response) {
+          alert(response.disabledWebsites.join(", "));
+        }
+      );
+    });
 });

@@ -55,25 +55,6 @@ function isDomainInList(domain, list) {
   return list.includes(domain);
 }
 
-function checkDomainAndRunExtension() {
-  var domain = window.location.hostname.replace("www.", "");
-
-  if (!isDomainInList(domain, blockedDomains)) {
-    console.log(
-      `BionicReading: ${domain} not in list.. running bionic reading`
-    );
-    // If the domain is not in the list, run the extension logic
-    boldTextInNode(document.body);
-
-    // Start observing the entire document with the configured parameters
-    observer.observe(document, { childList: true, subtree: true });
-  } else {
-    console.log(
-      `BionicReading: ${domain} in list.. not running bionic reading`
-    );
-  }
-}
-
 // MutationObserver to watch for changes in the DOM
 const observer = new MutationObserver((mutationsList, observer) => {
   var addedNodes = [];
@@ -103,30 +84,39 @@ function checkPauseStatus(callback) {
   );
 }
 
+function checkDomainStatus(callback) {
+  chrome.runtime.sendMessage(
+    { action: "get_domain_status" },
+    function (response) {
+      callback(response);
+    }
+  );
+}
+
 // Modified function to apply the bold effect only if the website is not disabled and the extension is not paused
 function applyBoldEffect() {
   checkPauseStatus(function (status) {
     if (!status.isPaused) {
-      // Original bold effect code (integrated)
-      var domain = window.location.hostname.replace("www.", "");
+      checkDomainStatus(function (blockedStatus) {
+        if (!blockedStatus.isBlocked) {
+          console.log(
+            `BionicReading: ${blockedStatus.domain} not in list.. running bionic reading`
+          );
+          // If the domain is not in the list, run the extension logic
+          boldTextInNode(document.body);
 
-      if (!isDomainInList(domain, blockedDomains)) {
-        console.log(
-          `BionicReading: ${domain} not in list.. running bionic reading`
-        );
-        // If the domain is not in the list, run the extension logic
-        boldTextInNode(document.body);
-
-        // Start observing the entire document with the configured parameters
-        observer.observe(document, { childList: true, subtree: true });
-      } else {
-        console.log(
-          `BionicReading: ${domain} in list.. not running bionic reading`
-        );
-      }
-    }
-    else {
-      console.log("BionicReading: Extension paused, not running bionic reading");
+          // Start observing the entire document with the configured parameters
+          observer.observe(document, { childList: true, subtree: true });
+        } else {
+          console.log(
+            `BionicReading: ${blockedStatus.domain} in list.. not running bionic reading`
+          );
+        }
+      });
+    } else {
+      console.log(
+        "BionicReading: Extension paused, not running bionic reading"
+      );
     }
   });
 }
