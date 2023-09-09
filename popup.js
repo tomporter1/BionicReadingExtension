@@ -23,7 +23,7 @@ chrome.storage.local.get(["strength", "blocklist"], function (result) {
   const blocklistValue = result.blocklist || [];
 
   document.getElementById("strength").value = strengthValue;
-  document.getElementById("blocklist").value = blocklistValue.join(",");
+  //document.getElementById("blocklist").value = blocklistValue.join(",");
 
   // If the values were not found in storage (i.e., defaults were used), save the defaults
   if (!result.strength || !result.blocklist) {
@@ -32,4 +32,43 @@ chrome.storage.local.get(["strength", "blocklist"], function (result) {
       blocklist: blocklistValue,
     });
   }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Get the button element
+  let toggleButton = document.getElementById("disable-for-website");
+
+  // Get the status of the current domain and set the button label accordingly
+  chrome.runtime.sendMessage(
+    { action: "get_domain_status" },
+    function (response) {
+      if (response.isBlocked) {
+        toggleButton.textContent = "Enable for This Website";
+      } else {
+        toggleButton.textContent = "Disable for This Website";
+      }
+    }
+  );
+
+  document
+    .getElementById("disable-for-website")
+    .addEventListener("click", function () {
+      chrome.runtime.sendMessage(
+        { action: "disable_for_website" },
+        function (response) {
+          console.log(response.message);
+        }
+      );
+    });
+
+  document
+    .getElementById("pause-for-session")
+    .addEventListener("click", function () {
+      chrome.runtime.sendMessage(
+        { action: "pause_for_session" },
+        function (response) {
+          console.log(response.message);
+        }
+      );
+    });
 });

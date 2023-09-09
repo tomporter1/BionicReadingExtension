@@ -97,16 +97,16 @@ chrome.storage.local.get(["strength", "blocklist"], function (result) {
   strength = result.strength || 0.4; // Default to 0.4
   blockedDomains = result.blocklist || [];
 
-  console.log(
-    `BionicReading: Loaded ${blockedDomains.length} domains to block.`
-  );
-  console.log(`BionicReading: Strength: ${strength}`);
-  console.log(
-    `BionicReading: result.strength: ${result.strength}, result.blocklist: ${result.blocklist}`
-  );
+  // console.log(
+  //   `BionicReading: Loaded ${blockedDomains.length} domains to block.`
+  // );
+  // console.log(`BionicReading: Strength: ${strength}`);
+  // console.log(
+  //   `BionicReading: result.strength: ${result.strength}, result.blocklist: ${result.blocklist}`
+  // );
 
   if (!result.strength || !result.blocklist) {
-    console.log("No settings found in storage, saving defaults.");
+    // console.log("No settings found in storage, saving defaults.");
     chrome.storage.local.set({
       strength: strengthValue,
       blocklist: blocklistValue,
@@ -115,3 +115,41 @@ chrome.storage.local.get(["strength", "blocklist"], function (result) {
 
   checkDomainAndRunExtension();
 });
+
+// Function to check whether the current website is disabled or the extension is paused
+function checkWebsiteStatus(callback) {
+  chrome.runtime.sendMessage(
+    { action: "check_website_status" },
+    function (response) {
+      callback(response);
+    }
+  );
+}
+
+// Modified function to apply the bold effect only if the website is not disabled and the extension is not paused
+function applyBoldEffect() {
+  checkWebsiteStatus(function (status) {
+    if (!status.isDisabled && !status.isPaused) {
+      // Original bold effect code (integrated)
+      var domain = window.location.hostname.replace("www.", "");
+
+      if (!isDomainInList(domain, blockedDomains)) {
+        console.log(
+          `BionicReading: ${domain} not in list.. running bionic reading`
+        );
+        // If the domain is not in the list, run the extension logic
+        boldTextInNode(document.body);
+
+        // Start observing the entire document with the configured parameters
+        observer.observe(document, { childList: true, subtree: true });
+      } else {
+        console.log(
+          `BionicReading: ${domain} in list.. not running bionic reading`
+        );
+      }
+    }
+  });
+}
+
+// Call the modified function to apply the bold effect
+applyBoldEffect();
