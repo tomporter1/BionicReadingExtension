@@ -18,7 +18,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
         // Check if the domain is already in the list
         let domainIndex = disabledWebsites.indexOf(domain);
-        console.log(`Domain index: ${domainIndex}`);
         if (domainIndex !== -1) {
           console.log("Website already blocked... unblocking");
           // If the domain is in the list, remove it to unblock
