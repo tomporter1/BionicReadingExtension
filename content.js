@@ -24,7 +24,7 @@ function boldTextInNode(node) {
         /\b(\w+)\b/g,
         function (match, word) {
           const boldLength = Math.ceil(word.length * strength);
-          return `<strong class="bionic-bold">${word.substring(
+          return `<strong">${word.substring(
             0,
             boldLength
           )}</strong>${word.substring(boldLength)}`;
