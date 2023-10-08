@@ -1,5 +1,6 @@
 var strength = 0.4;
 var blockedDomains = [];
+const skipTags = ["BUTTON", "INPUT", "SELECT", "TEXTAREA", "OPTION", "OPTGROUP", "LABEL"];
 
 /**
  * Bold the text in a given node.
@@ -13,6 +14,7 @@ function boldTextInNode(node) {
 	if (
 		node.nodeType === Node.TEXT_NODE &&
 		node.parentNode &&
+		!skipTags.includes(node.parentNode.tagName) &&
 		node.parentNode.classList &&
 		!node.parentNode.classList.contains("bionic-processed")
 	) {

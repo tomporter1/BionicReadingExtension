@@ -1,5 +1,5 @@
 strong.bold {
     font-weight: bold;
-    /*color: blue;
-    /* if you want the bolded letters to be blue, for example */
+    font-size: 100%; /* Slightly reduce the font size */
+    line-height: 1; /* Ensure consistent line height */
 }
