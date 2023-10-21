@@ -3,14 +3,30 @@ var blockedDomains = [];
 const skipTags = ["BUTTON", "INPUT", "SELECT", "TEXTAREA", "OPTION", "OPTGROUP", "LABEL"];
 
 /**
+ * Checks if a given node is within the <head> tag.
+ * @param {Node} node - The node to check.
+ * @returns {boolean} - True if the node is within the <head> tag, false otherwise.
+ */
+function isWithinHead(node) {
+	while (node) {
+		if (node.tagName && node.tagName.toLowerCase() === 'head') {
+			return true;
+		}
+		node = node.parentNode;
+	}
+	return false;
+}
+
+/**
  * Bold the text in a given node.
  * @param {Node} node - The node to process.
  */
 function boldTextInNode(node) {
 	//null check on node
-	if (!node) {
+	if (!node || isWithinHead(node)) {
 		return;
 	}
+
 	if (
 		node.nodeType === Node.TEXT_NODE &&
 		node.parentNode &&
