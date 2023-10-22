@@ -27,6 +27,22 @@ function boldTextInNode(node) {
 		return;
 	}
 
+	// Skip processing <script> tags
+	if (node.tagName && node.tagName.toLowerCase() === 'script') {
+		return;
+	}
+
+	// Skip processing non-textual nodes
+	// if (node.nodeType !== Node.TEXT_NODE) {
+	// 	return;
+	// }
+
+	// Check for element visibility
+	const style = window.getComputedStyle(node.parentNode);
+	if (style.display === 'none' || style.visibility === 'hidden') {
+		return;
+	}
+
 	if (
 		node.nodeType === Node.TEXT_NODE &&
 		node.parentNode &&
@@ -145,5 +161,7 @@ function applyBoldEffect() {
 	});
 }
 
+setTimeout(applyBoldEffect, 500);
+
 // Call the modified function to apply the bold effect
-applyBoldEffect();
+//applyBoldEffect();
