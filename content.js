@@ -32,14 +32,15 @@ function boldTextInNode(node) {
 		return;
 	}
 
-	// Skip processing non-textual nodes
-	// if (node.nodeType !== Node.TEXT_NODE) {
-	// 	return;
-	// }
-
 	// Check for element visibility
 	const style = window.getComputedStyle(node.parentNode);
 	if (style.display === 'none' || style.visibility === 'hidden') {
+		return;
+	}
+
+	// Check word count for TEXT_NODE or its parent element
+	let textContent = (node.nodeType === Node.TEXT_NODE) ? node.textContent : node.innerText;
+	if (textContent.split(/\s+/).length < 30) {
 		return;
 	}
 
